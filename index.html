@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microéconomie - Examen & Révisions</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Flashcard perspective 3D */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col overflow-x-hidden antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 w-full border-b border-slate-800 bg-slate-950/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-xl shadow-lg shadow-indigo-500/20">
+                        <i data-lucide="graduation-cap" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
+                            Microéconomie
+                        </h1>
+                        <p class="text-xs text-slate-400 font-medium">DEGEAD 1 - Université Paris Dauphine-PSL</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="hidden md:flex space-x-1 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800">
+                    <button onclick="switchTab('exam')" id="tab-btn-exam" class="tab-btn flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all text-white bg-indigo-600 shadow-md">
+                        <i data-lucide="award" class="w-4 h-4"></i>
+                        <span>Examen Partiel (15 Q)</span>
+                    </button>
+                    <button onclick="switchTab('flashcards')" id="tab-btn-flashcards" class="tab-btn flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                        <i data-lucide="layers" class="w-4 h-4"></i>
+                        <span>Flashcards Synthétiques</span>
+                    </button>
+                    <button onclick="switchTab('simulators')" id="tab-btn-simulators" class="tab-btn flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                        <i data-lucide="calculator" class="w-4 h-4"></i>
+                        <span>Simulateurs & Graphiques</span>
+                    </button>
+                </nav>
+
+                <!-- Score Status Badge -->
+                <div class="hidden lg:flex items-center space-x-3 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-full">
+                    <div class="flex items-center space-x-1.5 text-xs text-slate-300">
+                        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                        <span class="font-medium">Statut Examen :</span>
+                        <span id="header-status" class="font-bold text-amber-400">En cours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Bar -->
+        <div class="md:hidden border-t border-slate-800 bg-slate-900 px-2 py-2 flex justify-around">
+            <button onclick="switchTab('exam')" id="mob-btn-exam" class="mob-tab-btn flex flex-col items-center p-2 text-xs font-medium text-indigo-400">
+                <i data-lucide="award" class="w-5 h-5 mb-1"></i>
+                <span>Examen</span>
+            </button>
+            <button onclick="switchTab('flashcards')" id="mob-btn-flashcards" class="mob-tab-btn flex flex-col items-center p-2 text-xs font-medium text-slate-400">
+                <i data-lucide="layers" class="w-5 h-5 mb-1"></i>
+                <span>Flashcards</span>
+            </button>
+            <button onclick="switchTab('simulators')" id="mob-btn-simulators" class="mob-tab-btn flex flex-col items-center p-2 text-xs font-medium text-slate-400">
+                <i data-lucide="calculator" class="w-5 h-5 mb-1"></i>
+                <span>Outils</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ================= SECTION 1: EXAMEN OFFICIEL ================= -->
+        <section id="tab-exam" class="tab-content space-y-6">
+            
+            <!-- Exam Banner / Instructions -->
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <div class="flex items-center space-x-2 text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">
+                        <i data-lucide="file-check-2" class="w-4 h-4"></i>
+                        <span>Simulation d'Examen Partiel</span>
+                    </div>
+                    <h2 class="text-xl font-extrabold text-white">Épreuve de Microéconomie (L1)</h2>
+                    <p class="text-xs text-slate-400 mt-1 max-w-2xl">
+                        15 questions à choix multiples (1 pt par question). Préparez un brouillon pour les calculs. Le corrigé complet s'affichera à la fin.
+                    </p>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                    <button onclick="resetExam()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-semibold rounded-xl transition flex items-center justify-center gap-2">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        Réinitialiser
+                    </button>
+                    <button onclick="submitExam()" id="submit-btn" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-500/25 transition flex items-center justify-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        Soumettre ma copie
+                    </button>
+                </div>
+            </div>
+
+            <!-- Exam Score Results Summary -->
+            <div id="results-card" class="hidden bg-gradient-to-r from-indigo-950/80 via-slate-900 to-slate-900 border-2 border-indigo-500/50 p-6 rounded-2xl shadow-2xl space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-indigo-300 font-bold">Résultat Officiel</span>
+                        <h3 id="result-title" class="text-2xl font-black text-white mt-0.5">Votre copie a été corrigée !</h3>
+                    </div>
+                    <div class="bg-slate-950/80 border border-indigo-500/30 px-6 py-3 rounded-xl text-center">
+                        <div class="text-[10px] uppercase text-slate-400 font-semibold">Note Finale</div>
+                        <div id="final-score" class="text-3xl font-black text-emerald-400">0 / 15</div>
+                    </div>
+                </div>
+                <p id="result-feedback" class="text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+                    Explications pédagogiques et corrigé complet sous chaque question ci-dessous.
+                </p>
+            </div>
+
+            <!-- Exam Sticky Progress Bar -->
+            <div class="bg-slate-900/90 backdrop-blur-md border border-slate-800 p-4 rounded-xl sticky top-20 z-30 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div class="w-full sm:w-2/3">
+                    <div class="flex justify-between items-center mb-1.5 text-xs text-slate-400">
+                        <span>Avancement du test</span>
+                        <span id="exam-progress-text" class="font-bold text-indigo-400">0 / 15 répondue</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div id="exam-progress-bar" class="bg-gradient-to-r from-indigo-500 to-violet-500 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+                <button onclick="scrollToUnanswered()" class="text-xs font-semibold text-slate-400 hover:text-indigo-300 transition flex items-center gap-1 shrink-0">
+                    <i data-lucide="arrow-down-circle" class="w-4 h-4"></i>
+                    <span>Aller à la première non répondue</span>
+                </button>
+            </div>
+
+            <!-- Exam Questions Grid Container -->
+            <div id="exam-container" class="space-y-6">
+                <!-- Injected via JavaScript -->
+            </div>
+
+            <!-- Bottom Floating Submit Button -->
+            <div class="flex justify-center pt-6 pb-12">
+                <button onclick="submitExam()" class="px-8 py-4 bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 hover:opacity-95 text-white font-extrabold text-sm rounded-2xl shadow-2xl shadow-indigo-500/30 transition flex items-center gap-3">
+                    <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                    <span>Soumettre ma copie et voir le corrigé complet</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 2: FLASHCARDS & FICHES ================= -->
+        <section id="tab-flashcards" class="tab-content hidden space-y-6">
+            
+            <!-- Controls Header: Theme Filter + Mode Selector -->
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Flashcards de Révision</h2>
+                    <p class="text-xs text-slate-400 mt-1">Formules, définitions et propriétés essentielles de Microéconomie.</p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
+                    <!-- Mode Switcher -->
+                    <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex shrink-0">
+                        <button id="view-mode-learn" onclick="setFlashcardMode('learn')" class="px-3 py-1.5 text-xs font-bold rounded-lg text-white bg-indigo-600 flex items-center gap-1.5 transition">
+                            <i data-lucide="brain-circuit" class="w-4 h-4"></i>
+                            <span>Mode Apprendre</span>
+                        </button>
+                        <button id="view-mode-grid" onclick="setFlashcardMode('grid')" class="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5 transition">
+                            <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                            <span>Vue Fiches (Toutes)</span>
+                        </button>
+                    </div>
+
+                    <!-- Theme Filters -->
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="filterCards('all', this)" class="card-filter-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-indigo-600 text-white">Tous</button>
+                        <button onclick="filterCards('consommateur', this)" class="card-filter-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Consommateur</button>
+                        <button onclick="filterCards('producteur', this)" class="card-filter-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Producteur</button>
+                        <button onclick="filterCards('marche', this)" class="card-filter-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Marché & CPP</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODE 1: MODE APPRENDRE (CARTE PAR CARTE) -->
+            <div id="flashcard-learn-container" class="max-w-xl mx-auto space-y-6">
+                <!-- Progress & Stats Bar -->
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-400">Progression globale :</span>
+                        <span id="learn-stats-text" class="text-indigo-400">0 / 0 maîtrisées</span>
+                    </div>
+                    <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
+                        <div id="learn-progress-bar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-500 font-medium pt-1">
+                        <span>Cartes restantes : <strong id="learn-remaining-count" class="text-slate-300">0</strong></span>
+                        <span>Acquises : <strong id="learn-mastered-count" class="text-emerald-400">0</strong></span>
+                    </div>
+                </div>
+
+                <!-- Single Card Container -->
+                <div id="single-card-area">
+                    <!-- Injected dynamically in JS -->
+                </div>
+
+                <!-- Action Controls (À revoir vs Compris) -->
+                <div id="learn-action-controls" class="grid grid-cols-2 gap-4">
+                    <button onclick="markCurrentCard(false)" class="p-4 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-2xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg">
+                        <i data-lucide="x-circle" class="w-5 h-5"></i>
+                        <span>❌ À revoir</span>
+                    </button>
+                    <button onclick="markCurrentCard(true)" class="p-4 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-2xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-lg">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                        <span>✅ Compris !</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODE 2: VUE GRILLE (TOUTES LES FICHES) -->
+            <div id="flashcards-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- ================= SECTION 3: SIMULATEURS & GRAPHIQUES ================= -->
+        <section id="tab-simulators" class="tab-content hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- 1. Calculateur Optimum du Consommateur -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i data-lucide="shopping-cart" class="w-5 h-5 text-indigo-400"></i>
+                                Contrainte Budgétaire
+                            </h3>
+                            <span class="text-xs px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 font-medium border border-indigo-500/20">Consommateur</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-6">
+                            Simulez les quantités maximales consommables pour un budget $R$ et des prix $P_X$, $P_Y$. (Équation : $R = P_X X + P_Y Y$)
+                        </p>
+
+                        <div class="space-y-4 bg-slate-950 p-4 rounded-xl border border-slate-800">
+                            <div class="grid grid-cols-3 gap-4">
+                                <div>
+                                    <label class="text-slate-400 text-xs font-medium block mb-1">Revenu ($R$)</label>
+                                    <input type="number" id="budget-r" value="100" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-sm font-semibold focus:outline-none focus:border-indigo-500" oninput="updateBudget()">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 text-xs font-medium block mb-1">Prix de X ($P_X$)</label>
+                                    <input type="number" id="budget-px" value="5" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-sm font-semibold focus:outline-none focus:border-indigo-500" oninput="updateBudget()">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 text-xs font-medium block mb-1">Prix de Y ($P_Y$)</label>
+                                    <input type="number" id="budget-py" value="10" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-sm font-semibold focus:outline-none focus:border-indigo-500" oninput="updateBudget()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 grid grid-cols-3 gap-4">
+                            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl text-center">
+                                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Max de X ($R/P_X$)</span>
+                                <div id="res-maxx" class="text-xl font-extrabold text-indigo-400 mt-1">20</div>
+                            </div>
+                            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl text-center">
+                                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Max de Y ($R/P_Y$)</span>
+                                <div id="res-maxy" class="text-xl font-extrabold text-emerald-400 mt-1">10</div>
+                            </div>
+                            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl text-center">
+                                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Pente ($-P_X/P_Y$)</span>
+                                <div id="res-pente" class="text-xl font-extrabold text-rose-400 mt-1">-0.5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Graphique Offre & Demande (Market Equilibrium) -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-400"></i>
+                                Équilibre du Marché (CPP)
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Visualisation de la rencontre entre l'Offre et la Demande.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Sliders to shift curves -->
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                <label class="text-[11px] text-slate-400 font-medium block mb-2">Choc de Demande (Déplacement)</label>
+                                <input type="range" id="demand-shift" min="-50" max="50" step="5" value="0" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" oninput="updateMarketChart()">
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                <label class="text-[11px] text-slate-400 font-medium block mb-2">Choc d'Offre (Déplacement)</label>
+                                <input type="range" id="supply-shift" min="-50" max="50" step="5" value="0" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500" oninput="updateMarketChart()">
+                            </div>
+                        </div>
+
+                        <!-- Graph Canvas -->
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 h-[250px] relative">
+                            <canvas id="marketChart"></canvas>
+                        </div>
+
+                        <!-- Results -->
+                        <div class="flex justify-between items-center bg-slate-950 border border-slate-800 p-3 rounded-xl">
+                            <div class="text-xs text-slate-400">Prix d'Équilibre ($P^*$) : <strong id="eq-price" class="text-white text-sm ml-1">50</strong></div>
+                            <div class="text-xs text-slate-400">Quantité Échangée ($Q^*$) : <strong id="eq-quant" class="text-white text-sm ml-1">100</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            <p>Révisions de Microéconomie L1 - Université Paris Dauphine-PSL</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTING -->
+    <script>
+        /* ================= 15 MICROECONOMICS EXAM QUESTIONS ================= */
+        const examQuestions = [
+            {
+                id: 1,
+                question: "Sur un marché, les fonctions d'offre et de demande sont données par : Q_O = -100 + 400P et Q_D = 1100 - 200P. Quel est le prix d'équilibre ?",
+                options: [
+                    "P = 1",
+                    "P = 2",
+                    "P = 3",
+                    "P = 4"
+                ],
+                correct: 1,
+                explanation: "À l'équilibre, l'offre est égale à la demande (Q_O = Q_D). \n-100 + 400P = 1100 - 200P \n400P + 200P = 1100 + 100 \n600P = 1200 \nP = 1200 / 600 = 2."
+            },
+            {
+                id: 2,
+                question: "Lequel de ces critères ne fait pas partie des conditions de la Concurrence Pure et Parfaite (CPP) ?",
+                options: [
+                    "L'atomicité du marché.",
+                    "L'homogénéité des produits.",
+                    "L'intervention régulatrice de l'État.",
+                    "La transparence (information parfaite)."
+                ],
+                correct: 2,
+                explanation: "Les 5 conditions de la CPP sont : l'atomicité, l'homogénéité, la libre entrée/sortie, la transparence de l'information et la libre circulation des facteurs. L'intervention de l'État n'en fait pas partie."
+            },
+            {
+                id: 3,
+                question: "Le Taux Marginal de Substitution (TMS) entre le bien X et le bien Y mesure :",
+                options: [
+                    "Le rapport des prix des deux biens sur le marché.",
+                    "La quantité du bien Y qu'un individu est prêt à céder pour obtenir une unité supplémentaire de bien X, en gardant son utilité constante.",
+                    "Le budget alloué à la consommation des deux biens.",
+                    "L'élasticité de la demande par rapport au revenu."
+                ],
+                correct: 1,
+                explanation: "Le TMS(X,Y) mesure la valeur subjective d'une unité de X exprimée en unités de Y (le sacrifice en Y pour compenser la hausse de X)."
+            },
+            {
+                id: 4,
+                question: "Mathématiquement, le TMS entre X et Y s'écrit généralement comme le rapport :",
+                options: [
+                    "Des utilités marginales : Um(X) / Um(Y)",
+                    "Des prix : P(X) / P(Y)",
+                    "Des revenus : R(X) / R(Y)",
+                    "Des quantités totales : X / Y"
+                ],
+                correct: 0,
+                explanation: "Sur une courbe d'indifférence (dU = 0), on a Um(X)dX + Um(Y)dY = 0. Le TMS est défini par -dY/dX, ce qui donne Um(X) / Um(Y)."
+            },
+            {
+                id: 5,
+                question: "Dans le modèle du consommateur, à l'optimum intérieur, le TMS(X,Y) est strictement égal :",
+                options: [
+                    "À l'utilité totale.",
+                    "À 1.",
+                    "Au rapport des prix : P(X) / P(Y).",
+                    "À l'inverse du revenu : 1 / R."
+                ],
+                correct: 2,
+                explanation: "À l'optimum intérieur, la courbe d'indifférence est tangente à la droite de budget. Leurs pentes sont égales, d'où TMS = P(X) / P(Y)."
+            },
+            {
+                id: 6,
+                question: "Si l'élasticité-prix croisée entre deux biens A et B est négative (E_AB < 0), alors ces biens sont :",
+                options: [
+                    "Substituables.",
+                    "Complémentaires.",
+                    "Indépendants.",
+                    "Des biens de Giffen."
+                ],
+                correct: 1,
+                explanation: "Si le prix de B augmente et que la demande de A diminue (élasticité négative), cela signifie que les biens sont consommés ensemble (comme le café et le sucre) : ils sont complémentaires."
+            },
+            {
+                id: 7,
+                question: "L'équation de la droite de budget pour deux biens X et Y, avec un revenu R et des prix P_X et P_Y, s'écrit :",
+                options: [
+                    "R = X * Y * P_X * P_Y",
+                    "X / P_X + Y / P_Y = R",
+                    "R = P_X * X + P_Y * Y",
+                    "R = (P_X + P_Y) * (X + Y)"
+                ],
+                correct: 2,
+                explanation: "La contrainte budgétaire exprime que les dépenses totales (prix unitaire fois quantité) ne peuvent excéder le revenu R."
+            },
+            {
+                id: 8,
+                question: "Que représente une courbe d'indifférence ?",
+                options: [
+                    "L'ensemble des combinaisons de biens (X, Y) qui coûtent le même prix.",
+                    "L'ensemble des combinaisons de biens (X, Y) qui procurent le même niveau d'utilité au consommateur.",
+                    "La relation entre le revenu du consommateur et la quantité demandée.",
+                    "La courbe d'offre de l'entreprise sur le long terme."
+                ],
+                correct: 1,
+                explanation: "Par définition, le consommateur est indifférent entre tous les paniers situés sur une même courbe d'indifférence car ils apportent la même satisfaction globale."
+            },
+            {
+                id: 9,
+                question: "Dans le cadre de la théorie du producteur, le Coût Marginal (Cm) est défini comme :",
+                options: [
+                    "Le coût total divisé par la quantité produite (CT/Q).",
+                    "Le supplément de coût entraîné par la production d'une unité supplémentaire.",
+                    "La différence entre le prix de vente et le coût variable moyen.",
+                    "Le coût des facteurs fixes divisé par la quantité."
+                ],
+                correct: 1,
+                explanation: "Le Coût Marginal correspond à la dérivée du Coût Total par rapport à la quantité (dCT/dQ), c'est-à-dire le coût de la dernière unité produite."
+            },
+            {
+                id: 10,
+                question: "Pour maximiser son profit en Concurrence Pure et Parfaite (CPP), l'entreprise fixe sa quantité de telle sorte que :",
+                options: [
+                    "Le Prix = Coût Moyen (P = CM).",
+                    "Le Prix = Coût Marginal (P = Cm).",
+                    "La Quantité soit la plus grande possible.",
+                    "Le Coût Fixe soit nul."
+                ],
+                correct: 1,
+                explanation: "La condition de maximisation du profit est Recette Marginale = Coût Marginal. Or, en CPP, le prix est imposé (Price Taker), donc la recette marginale est égale au Prix."
+            },
+            {
+                id: 11,
+                question: "En CPP, si le prix de marché tombe en dessous du minimum du Coût Variable Moyen (Seuil de fermeture), que fait l'entreprise à court terme ?",
+                options: [
+                    "Elle augmente ses prix.",
+                    "Elle arrête sa production (Q=0).",
+                    "Elle produit davantage pour compenser les pertes.",
+                    "Elle fait une campagne publicitaire."
+                ],
+                correct: 1,
+                explanation: "Si le prix ne couvre même plus les coûts variables, l'entreprise perd moins d'argent en cessant toute production (elle ne supportera alors que ses coûts fixes)."
+            },
+            {
+                id: 12,
+                question: "Une courbe d'indifférence en forme de L (angle droit) caractérise :",
+                options: [
+                    "Des biens parfaitement substituables.",
+                    "Des biens parfaitement complémentaires.",
+                    "Une utilité quasi-linéaire.",
+                    "Des préférences non monotones."
+                ],
+                correct: 1,
+                explanation: "Pour des biens parfaitement complémentaires (ex: chaussure droite / chaussure gauche), avoir plus de l'un sans l'autre n'augmente pas l'utilité, formant une courbe en L."
+            },
+            {
+                id: 13,
+                question: "L'effet de substitution à la suite d'une hausse du prix du bien X implique :",
+                options: [
+                    "Une baisse de la consommation de X, car le consommateur se reporte sur des biens devenus relativement moins chers.",
+                    "Une baisse du pouvoir d'achat global du consommateur.",
+                    "Une hausse de la consommation de X car c'est un bien de luxe.",
+                    "Le déplacement parallèle de la droite de budget vers l'origine."
+                ],
+                correct: 0,
+                explanation: "L'effet total d'une variation de prix se décompose en effet de substitution (on consomme moins du bien devenu relativement plus cher à utilité constante) et effet de revenu."
+            },
+            {
+                id: 14,
+                question: "Quel est l'impact d'une hausse du revenu nominal R sur la droite de budget, si les prix restent constants ?",
+                options: [
+                    "La droite pivote vers l'extérieur.",
+                    "La droite se déplace parallèlement vers l'extérieur (droite).",
+                    "La pente de la droite (le rapport des prix) change.",
+                    "La droite se déplace parallèlement vers l'origine (gauche)."
+                ],
+                correct: 1,
+                explanation: "Une hausse du budget permet d'acheter davantage des deux biens. La pente (qui est -Px/Py) ne change pas, donc c'est un déplacement parallèle vers la droite."
+            },
+            {
+                id: 15,
+                question: "Un bien inférieur est un bien dont :",
+                options: [
+                    "La demande baisse quand son prix baisse.",
+                    "La demande augmente quand le revenu baisse.",
+                    "La demande augmente proportionnellement plus que le revenu.",
+                    "L'élasticité-prix est positive."
+                ],
+                correct: 1,
+                explanation: "Un bien inférieur (ex: produits de très bas de gamme) voit sa demande diminuer lorsque le revenu des ménages augmente (et inversement, sa demande augmente si le revenu baisse)."
+            }
+        ];
+
+        /* ================= FLASHCARDS DATA (MICROECONOMY) ================= */
+        const flashcardsData = [
+            // THEME 1 : CONSOMMATEUR
+            { theme: "consommateur", tag: "Consommateur", title: "Axiomes de rationalité", front: "Quels sont les axiomes fondamentaux des préférences du consommateur ?", back: "1. Complétude (il peut toujours comparer des paniers).\n2. Transitivité (Si A>B et B>C alors A>C).\n3. Non-satiété ou monotonie (Plus est préféré à moins)." },
+            { theme: "consommateur", tag: "Consommateur", title: "TMS (Taux Marginal de Substitution)", front: "Quelle est la définition et la formule du TMS(X,Y) ?", back: "Quantité du bien Y sacrifiée pour obtenir une unité de bien X tout en gardant l'utilité constante.\nFormule : TMS(X,Y) = Um(X) / Um(Y)." },
+            { theme: "consommateur", tag: "Consommateur", title: "Droite de budget", front: "Quelle est l'équation de la droite de budget et sa pente ?", back: "Équation : R = P_X * X + P_Y * Y.\nPente : - P_X / P_Y (le taux d'échange objectif sur le marché)." },
+            { theme: "consommateur", tag: "Consommateur", title: "Optimum (Solution Intérieure)", front: "Quelle est la condition d'optimalité pour un panier intérieur ?", back: "Le point de tangence entre la courbe d'indifférence et la droite de budget.\nMathématiquement : TMS(X,Y) = P_X / P_Y." },
+            { theme: "consommateur", tag: "Consommateur", title: "Élasticité-Revenu", front: "Comment interpréter une élasticité-revenu (E_R) ?", back: "E_R < 0 : Bien inférieur.\n0 < E_R < 1 : Bien normal (nécessité).\nE_R > 1 : Bien supérieur (luxe)." },
+            { theme: "consommateur", tag: "Consommateur", title: "Effet Substitution / Revenu", front: "Selon l'équation de Slutsky, quels sont les deux effets suite à un changement de prix ?", back: "1. Effet de substitution : changement lié au nouveau rapport des prix (toujours négatif).\n2. Effet de revenu : changement lié à la modification du pouvoir d'achat." },
+            
+            // THEME 2 : PRODUCTEUR
+            { theme: "producteur", tag: "Producteur", title: "Fonction de production", front: "Qu'est-ce que la productivité marginale (PmL) ?", back: "C'est la production supplémentaire obtenue par l'utilisation d'une unité supplémentaire du facteur travail (L).\nFormule : PmL = dQ/dL." },
+            { theme: "producteur", tag: "Producteur", title: "TMST", front: "Qu'est-ce que le TMST (Taux Marginal de Substitution Technique) ?", back: "La quantité de capital (K) qu'il faut céder pour une unité de travail (L) en plus, en gardant la production constante.\nFormule : TMST = PmL / PmK." },
+            { theme: "producteur", tag: "Producteur", title: "Rendements d'échelle", front: "Comment définit-on des rendements d'échelle constants, croissants ou décroissants ?", back: "Si on multiplie tous les facteurs par t (t>1) :\n- Q est multipliée par t -> Constants.\n- Q est multipliée par plus que t -> Croissants.\n- Q est multipliée par moins que t -> Décroissants." },
+            { theme: "producteur", tag: "Producteur", title: "Maximisation du profit", front: "À court terme, quelle est la règle de maximisation du profit en CPP ?", back: "L'entreprise produit la quantité telle que le Prix de marché est égal au Coût Marginal : P = Cm(Q)." },
+            { theme: "producteur", tag: "Producteur", title: "Seuils de rentabilité et fermeture", front: "Que sont le seuil de rentabilité et le seuil de fermeture ?", back: "Seuil de rentabilité : Prix = minimum du Coût Moyen (profit nul).\nSeuil de fermeture : Prix = minimum du Coût Variable Moyen (en dessous, l'entreprise ferme)." },
+
+            // THEME 3 : MARCHE
+            { theme: "marche", tag: "Marché & CPP", title: "Conditions de la CPP", front: "Quelles sont les 5 conditions de la Concurrence Pure et Parfaite ?", back: "1. Atomicité\n2. Homogénéité des produits\n3. Libre entrée/sortie\n4. Transparence de l'information\n5. Libre mobilité des facteurs." },
+            { theme: "marche", tag: "Marché & CPP", title: "Price-Taker", front: "Que signifie être 'Price-Taker' (preneur de prix) ?", back: "Les agents (acheteurs ou vendeurs) sont trop petits pour influencer le prix du marché. Ils subissent le prix d'équilibre qui s'impose à eux." },
+            { theme: "marche", tag: "Marché & CPP", title: "Équilibre de marché", front: "Comment se forme l'équilibre partiel de marché ?", back: "À l'intersection de la courbe de demande globale (décroissante) et d'offre globale (croissante).\nLa quantité offerte est égale à la quantité demandée." },
+            { theme: "marche", tag: "Marché & CPP", title: "Surplus du consommateur", front: "Qu'est-ce que le surplus du consommateur ?", back: "C'est la différence entre le prix maximum qu'il était prêt à payer (prix de réserve) et le prix qu'il paie réellement sur le marché." },
+            { theme: "marche", tag: "Marché & CPP", title: "Déplacement des courbes", front: "Qu'est-ce qui déplace la courbe de demande (hors changement du prix du bien) ?", back: "Une variation des revenus, une modification des goûts/préférences, ou un changement du prix des autres biens (substituts/complémentaires)." }
+        ];
+
+        /* ================= STATE VARIABLES ================= */
+        let userExamAnswers = {};
+        let isExamSubmitted = false;
+
+        // Flashcards Engine State
+        let currentLearnDeck = [];
+        let activeLearnIndex = 0;
+        let isCurrentCardFlipped = false;
+        let totalInitialCards = 0;
+        let masteredCardsCount = 0;
+        let currentThemeFilter = 'all';
+        let currentFlashcardMode = 'learn'; // 'learn' ou 'grid'
+        
+        // Simulators
+        let marketChartInstance = null;
+
+        /* ================= ON LOAD INITIALIZATION ================= */
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderExam();
+            initFlashcardsSystem();
+            updateBudget();
+            initMarketChart();
+        });
+
+        /* ================= TAB SWITCHING ================= */
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                btn.classList.add('text-slate-400', 'hover:text-white');
+            });
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if(activeBtn) activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+
+            document.querySelectorAll('.mob-tab-btn').forEach(btn => {
+                btn.classList.remove('text-indigo-400');
+                btn.classList.add('text-slate-400');
+            });
+            const activeMobBtn = document.getElementById(`mob-btn-${tabId}`);
+            if(activeMobBtn) activeMobBtn.classList.add('text-indigo-400');
+        }
+
+        /* ================= EXAM RENDER & LOGIC ================= */
+        function renderExam() {
+            const container = document.getElementById('exam-container');
+            container.innerHTML = '';
+
+            examQuestions.forEach((q, index) => {
+                const qCard = document.createElement('div');
+                qCard.className = "bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-md transition-all duration-200";
+                qCard.id = `exam-q-card-${q.id}`;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, optIdx) => {
+                    const letter = String.fromCharCode(97 + optIdx);
+                    optionsHTML += `
+                        <button onclick="selectExamOption(${q.id}, ${optIdx})" 
+                                id="exam-opt-${q.id}-${optIdx}"
+                                class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-800/80 hover:border-slate-700 text-sm text-slate-300 transition flex items-start space-x-3">
+                            <span class="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                                ${letter.toUpperCase()}
+                            </span>
+                            <span class="flex-1">${opt}</span>
+                        </button>
+                    `;
+                });
+
+                qCard.innerHTML = `
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Question ${index + 1} / 15</span>
+                        <span id="badge-status-${q.id}" class="text-[11px] font-semibold text-slate-500">Non répondue</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-4 leading-relaxed">${q.question}</h3>
+                    <div class="space-y-2.5 mb-4">
+                        ${optionsHTML}
+                    </div>
+                    <div id="exam-explanation-${q.id}" class="hidden mt-4 p-4 rounded-xl text-xs leading-relaxed"></div>
+                `;
+
+                container.appendChild(qCard);
+            });
+
+            updateExamProgress();
+        }
+
+        function selectExamOption(qId, selectedIdx) {
+            if (isExamSubmitted) return;
+
+            userExamAnswers[qId] = selectedIdx;
+            const q = examQuestions.find(item => item.id === qId);
+
+            q.options.forEach((_, optIdx) => {
+                const btn = document.getElementById(`exam-opt-${qId}-${optIdx}`);
+                if (optIdx === selectedIdx) {
+                    btn.className = "w-full text-left p-3.5 rounded-xl border-2 border-indigo-500 bg-indigo-950/40 text-white font-medium transition flex items-start space-x-3 shadow-md";
+                    btn.querySelector('span').className = "w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5";
+                } else {
+                    btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-800/80 hover:border-slate-700 text-sm text-slate-400 transition flex items-start space-x-3 opacity-60";
+                    btn.querySelector('span').className = "w-6 h-6 rounded-lg bg-slate-800 border border-slate-700 text-slate-500 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5";
+                }
+            });
+
+            const badge = document.getElementById(`badge-status-${qId}`);
+            badge.innerText = "Cochée";
+            badge.className = "text-[11px] font-semibold text-indigo-400";
+
+            updateExamProgress();
+        }
+
+        function updateExamProgress() {
+            const answeredCount = Object.keys(userExamAnswers).length;
+            const total = examQuestions.length;
+
+            document.getElementById('exam-progress-text').innerText = `${answeredCount} / ${total} répondue${answeredCount > 1 ? 's' : ''}`;
+            document.getElementById('exam-progress-bar').style.width = `${(answeredCount / total) * 100}%`;
+        }
+
+        function scrollToUnanswered() {
+            for (let q of examQuestions) {
+                if (userExamAnswers[q.id] === undefined) {
+                    const el = document.getElementById(`exam-q-card-${q.id}`);
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.add('ring-2', 'ring-indigo-500');
+                    setTimeout(() => el.classList.remove('ring-2', 'ring-indigo-500'), 1500);
+                    break;
+                }
+            }
+        }
+
+        function submitExam() {
+            if (isExamSubmitted) return;
+
+            const answeredCount = Object.keys(userExamAnswers).length;
+            if (answeredCount < 15) {
+                if (!confirm(`Attention : Vous n'avez répondu qu'à ${answeredCount} question(s) sur 15. Souhaitez-vous quand même soumettre votre copie ?`)) {
+                    scrollToUnanswered();
+                    return;
+                }
+            }
+
+            isExamSubmitted = true;
+
+            let score = 0;
+            examQuestions.forEach(q => {
+                const selected = userExamAnswers[q.id];
+                const isCorrect = (selected === q.correct);
+                if (isCorrect) score++;
+
+                q.options.forEach((_, optIdx) => {
+                    const btn = document.getElementById(`exam-opt-${q.id}-${optIdx}`);
+                    btn.disabled = true;
+
+                    if (optIdx === q.correct) {
+                        btn.className = "w-full text-left p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-100 font-medium transition flex items-start space-x-3";
+                        btn.querySelector('span').className = "w-6 h-6 rounded-lg bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5";
+                    } else if (optIdx === selected && !isCorrect) {
+                        btn.className = "w-full text-left p-3.5 rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-100 font-medium transition flex items-start space-x-3";
+                        btn.querySelector('span').className = "w-6 h-6 rounded-lg bg-rose-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5";
+                    } else {
+                        btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-950/30 text-slate-500 transition flex items-start space-x-3 opacity-30";
+                    }
+                });
+
+                const expBox = document.getElementById(`exam-explanation-${q.id}`);
+                expBox.classList.remove('hidden');
+                if (selected === q.correct) {
+                    expBox.className = "mt-4 p-4 rounded-xl text-xs leading-relaxed bg-emerald-950/30 border border-emerald-800/40 text-emerald-200/90";
+                    expBox.innerHTML = `<strong class="text-emerald-400 block mb-1">✓ Bonne réponse ! (1/1 pt)</strong> ${q.explanation}`;
+                } else {
+                    expBox.className = "mt-4 p-4 rounded-xl text-xs leading-relaxed bg-rose-950/30 border border-rose-800/40 text-rose-200/90";
+                    expBox.innerHTML = `<strong class="text-rose-400 block mb-1">✗ Réponse incorrecte (0/1 pt)</strong> ${q.explanation}`;
+                }
+
+                const badge = document.getElementById(`badge-status-${q.id}`);
+                if (selected === q.correct) {
+                    badge.innerText = "+1 Pt";
+                    badge.className = "text-xs font-extrabold text-emerald-400";
+                } else {
+                    badge.innerText = "0 Pt";
+                    badge.className = "text-xs font-extrabold text-rose-400";
+                }
+            });
+
+            const resultsCard = document.getElementById('results-card');
+            resultsCard.classList.remove('hidden');
+            document.getElementById('final-score').innerText = `${score} / 15`;
+
+            const titleEl = document.getElementById('result-title');
+            const feedbackEl = document.getElementById('result-feedback');
+
+            if (score >= 12) {
+                titleEl.innerText = "Félicitations ! Mention Très Bien 🎉";
+                feedbackEl.innerText = "Excellente maîtrise du programme de Microéconomie ! Vous maîtrisez les concepts fondamentaux.";
+            } else if (score >= 9) {
+                titleEl.innerText = "Bravo ! Très bon score 👍";
+                feedbackEl.innerText = "Vous avez une solide connaissance. Relisez les fiches explicatives sur vos erreurs ci-dessous.";
+            } else if (score >= 7) {
+                titleEl.innerText = "Examen Validé de justesse ⚖️";
+                feedbackEl.innerText = "Score correct. Pensez à retravailler les calculs de TMS et d'équilibre.";
+            } else {
+                titleEl.innerText = "Résultat insuffisant — Révisions requises 📚";
+                feedbackEl.innerText = "Utilisez les flashcards pour mémoriser les formules (TMS, Budget, Maximisation) avant le jour J !";
+            }
+
+            document.getElementById('header-status').innerText = `${score}/15`;
+            document.getElementById('header-status').className = "font-bold text-emerald-400";
+
+            resultsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetExam() {
+            if (isExamSubmitted && !confirm("Souhaitez-vous réinitialiser le test et effacer vos réponses ?")) return;
+            userExamAnswers = {};
+            isExamSubmitted = false;
+            document.getElementById('results-card').classList.add('hidden');
+            document.getElementById('header-status').innerText = "En cours";
+            document.getElementById('header-status').className = "font-bold text-amber-400";
+            renderExam();
+        }
+
+        /* ================= FLASHCARDS SYSTEM ================= */
+        function initFlashcardsSystem() {
+            startLearnSession(currentThemeFilter);
+            renderGridFlashcards();
+        }
+
+        function setFlashcardMode(mode) {
+            currentFlashcardMode = mode;
+            const learnContainer = document.getElementById('flashcard-learn-container');
+            const gridContainer = document.getElementById('flashcards-grid');
+
+            const btnLearn = document.getElementById('view-mode-learn');
+            const btnGrid = document.getElementById('view-mode-grid');
+
+            if (mode === 'learn') {
+                learnContainer.classList.remove('hidden');
+                gridContainer.classList.add('hidden');
+
+                btnLearn.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-white bg-indigo-600 flex items-center gap-1.5 transition";
+                btnGrid.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5 transition";
+            } else {
+                learnContainer.classList.add('hidden');
+                gridContainer.classList.remove('hidden');
+
+                btnGrid.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-white bg-indigo-600 flex items-center gap-1.5 transition";
+                btnLearn.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5 transition";
+            }
+        }
+
+        function filterCards(theme, btnElem) {
+            currentThemeFilter = theme;
+
+            if (btnElem) {
+                document.querySelectorAll('.card-filter-btn').forEach(b => {
+                    b.classList.remove('bg-indigo-600', 'text-white');
+                    b.classList.add('bg-slate-800', 'text-slate-300');
+                });
+                btnElem.classList.remove('bg-slate-800', 'text-slate-300');
+                btnElem.classList.add('bg-indigo-600', 'text-white');
+            }
+
+            startLearnSession(theme);
+            renderGridFlashcards();
+        }
+
+        function startLearnSession(themeFilter) {
+            if (themeFilter === 'all') {
+                currentLearnDeck = [...flashcardsData];
+            } else {
+                currentLearnDeck = flashcardsData.filter(c => c.theme === themeFilter);
+            }
+
+            // Shuffle
+            currentLearnDeck.sort(() => Math.random() - 0.5);
+
+            totalInitialCards = currentLearnDeck.length;
+            masteredCardsCount = 0;
+            activeLearnIndex = 0;
+            isCurrentCardFlipped = false;
+
+            renderActiveLearnCard();
+        }
+
+        function renderActiveLearnCard() {
+            const area = document.getElementById('single-card-area');
+            const controls = document.getElementById('learn-action-controls');
+
+            document.getElementById('learn-remaining-count').innerText = currentLearnDeck.length;
+            document.getElementById('learn-mastered-count').innerText = masteredCardsCount;
+            document.getElementById('learn-stats-text').innerText = `${masteredCardsCount} / ${totalInitialCards} maîtrisées`;
+
+            const progressPct = totalInitialCards > 0 ? (masteredCardsCount / totalInitialCards) * 100 : 0;
+            document.getElementById('learn-progress-bar').style.width = `${progressPct}%`;
+
+            if (currentLearnDeck.length === 0) {
+                area.innerHTML = `
+                    <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center space-y-4 shadow-xl">
+                        <div class="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl">🎉</div>
+                        <h3 class="text-xl font-black text-white">Session terminée !</h3>
+                        <p class="text-xs text-slate-400 max-w-sm mx-auto">Vous avez maîtrisé l'ensemble des concepts de ce paquet.</p>
+                        <button onclick="startLearnSession('${currentThemeFilter}')" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition inline-flex items-center gap-2">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            Recommencer ce paquet
+                        </button>
+                    </div>
+                `;
+                controls.classList.add('hidden');
+                lucide.createIcons();
+                return;
+            }
+
+            controls.classList.remove('hidden');
+            const card = currentLearnDeck[activeLearnIndex];
+            isCurrentCardFlipped = false;
+
+            area.innerHTML = `
+                <div class="perspective-1000 h-80 cursor-pointer" onclick="flipSingleLearnCard()">
+                    <div id="active-learn-card-inner" class="relative w-full h-full duration-500 transform-style-3d shadow-xl rounded-2xl">
+                        
+                        <!-- RECTO -->
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 border-slate-800 rounded-2xl p-6 flex flex-col justify-between backface-hidden">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">${card.tag}</span>
+                                    <i data-lucide="rotate-cw" class="w-4 h-4 text-slate-500"></i>
+                                </div>
+                                <h4 class="text-base font-extrabold text-white mb-2">${card.title}</h4>
+                                <p class="text-sm text-slate-200 mt-4 leading-relaxed font-medium">${card.front}</p>
+                            </div>
+                            <div class="text-[11px] text-slate-500 font-semibold flex items-center justify-between pt-4 border-t border-slate-800/60">
+                                <span>💡 Cliquez pour révéler la réponse</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-indigo-400"></i>
+                            </div>
+                        </div>
+
+                        <!-- VERSO -->
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-900 border-2 border-indigo-500/40 rounded-2xl p-6 flex flex-col justify-between backface-hidden rotate-y-180">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">Réponse / Synthèse</span>
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                                </div>
+                                <h5 class="text-sm font-bold text-white mb-2">${card.title}</h5>
+                                <p class="text-xs text-indigo-100 whitespace-pre-line leading-relaxed font-normal">${card.back}</p>
+                            </div>
+                            <div class="text-[10px] text-indigo-300/60 font-medium">Cliquer pour retourner la carte</div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
+        }
+
+        function flipSingleLearnCard() {
+            const cardInner = document.getElementById('active-learn-card-inner');
+            if (cardInner) {
+                isCurrentCardFlipped = !isCurrentCardFlipped;
+                cardInner.classList.toggle('rotate-y-180', isCurrentCardFlipped);
+            }
+        }
+
+        function markCurrentCard(knows) {
+            if (currentLearnDeck.length === 0) return;
+
+            if (knows) {
+                currentLearnDeck.splice(activeLearnIndex, 1);
+                masteredCardsCount++;
+            } else {
+                const card = currentLearnDeck.splice(activeLearnIndex, 1)[0];
+                currentLearnDeck.push(card);
+            }
+
+            if (currentLearnDeck.length > 0) {
+                activeLearnIndex = activeLearnIndex % currentLearnDeck.length;
+            }
+
+            renderActiveLearnCard();
+        }
+
+        function renderGridFlashcards() {
+            const grid = document.getElementById('flashcards-grid');
+            grid.innerHTML = '';
+
+            const filtered = currentThemeFilter === 'all' 
+                ? flashcardsData 
+                : flashcardsData.filter(c => c.theme === currentThemeFilter);
+
+            filtered.forEach((c) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = "perspective-1000 h-64 cursor-pointer";
+
+                cardEl.innerHTML = `
+                    <div onclick="flipCard(this)" class="card-inner relative w-full h-full duration-500 transform-style-3d shadow-lg rounded-2xl">
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between backface-hidden">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">${c.tag}</span>
+                                    <i data-lucide="rotate-cw" class="w-4 h-4 text-slate-500"></i>
+                                </div>
+                                <h4 class="text-base font-bold text-white mb-2">${c.title}</h4>
+                                <p class="text-xs text-slate-300 mt-2 leading-relaxed">${c.front}</p>
+                            </div>
+                            <div class="text-[11px] text-slate-500 font-medium flex items-center justify-between">
+                                <span>Cliquer pour révéler</span>
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-950/90 to-slate-900 border border-indigo-500/30 rounded-2xl p-6 flex flex-col justify-between backface-hidden rotate-y-180">
+                            <div>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">Réponse / Synthèse</span>
+                                <h5 class="text-sm font-bold text-white mt-2 mb-2">${c.title}</h5>
+                                <p class="text-xs text-indigo-100 whitespace-pre-line leading-relaxed">${c.back}</p>
+                            </div>
+                            <div class="text-[10px] text-indigo-300/60 font-medium">Cliquer pour retourner</div>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(cardEl);
+            });
+
+            lucide.createIcons();
+        }
+
+        function flipCard(cardInner) {
+            cardInner.classList.toggle('rotate-y-180');
+        }
+
+        /* ================= SIMULATORS ================= */
+        
+        // 1. Budget Constraint
+        function updateBudget() {
+            const r = parseFloat(document.getElementById('budget-r').value) || 0;
+            const px = parseFloat(document.getElementById('budget-px').value) || 1;
+            const py = parseFloat(document.getElementById('budget-py').value) || 1;
+
+            const maxX = r / px;
+            const maxY = r / py;
+            const slope = -(px / py);
+
+            document.getElementById('res-maxx').innerText = maxX.toFixed(2);
+            document.getElementById('res-maxy').innerText = maxY.toFixed(2);
+            document.getElementById('res-pente').innerText = slope.toFixed(2);
+        }
+
+        // 2. Market Equilibrium (Chart.js)
+        function initMarketChart() {
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            
+            marketChartInstance = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Demande (Q_D)',
+                            data: [],
+                            borderColor: '#818cf8', // Indigo 400
+                            backgroundColor: '#818cf8',
+                            showLine: true,
+                            borderWidth: 3,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Offre (Q_O)',
+                            data: [],
+                            borderColor: '#34d399', // Emerald 400
+                            backgroundColor: '#34d399',
+                            showLine: true,
+                            borderWidth: 3,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Équilibre',
+                            data: [],
+                            backgroundColor: '#fbbf24', // Amber 400
+                            borderColor: '#fff',
+                            borderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8' } },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `Prix = ${ctx.raw.y}, Quantité = ${ctx.raw.x}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            title: { display: true, text: 'Quantité (Q)', color: '#94a3b8' },
+                            grid: { color: '#1e293b' }, 
+                            ticks: { color: '#94a3b8' },
+                            min: 0, max: 200
+                        },
+                        y: { 
+                            title: { display: true, text: 'Prix (P)', color: '#94a3b8' },
+                            grid: { color: '#1e293b' }, 
+                            ticks: { color: '#94a3b8' },
+                            min: 0, max: 100
+                        }
+                    }
+                }
+            });
+
+            updateMarketChart();
+        }
+
+        function updateMarketChart() {
+            const shiftD = parseInt(document.getElementById('demand-shift').value) || 0;
+            const shiftS = parseInt(document.getElementById('supply-shift').value) || 0;
+
+            // Base functions:
+            // Qd = 150 - P  => P = 150 - Qd
+            // Qo = 50 + P   => P = Qo - 50
+            
+            // With shifts:
+            // Qd = (150 + shiftD) - P
+            // Qo = (50 + shiftS) + P
+            
+            const demandData = [];
+            const supplyData = [];
+            
+            const a_d = 150 + shiftD;
+            const a_s = 50 + shiftS;
+
+            for (let p = 0; p <= 120; p += 10) {
+                const qd = a_d - p;
+                const qs = a_s + p;
+                if (qd >= 0) demandData.push({ x: qd, y: p });
+                if (qs >= 0) supplyData.push({ x: qs, y: p });
+            }
+
+            // Eq: 150 + shiftD - P = 50 + shiftS + P => 2P = 100 + shiftD - shiftS
+            const p_star = (100 + shiftD - shiftS) / 2;
+            const q_star = a_d - p_star;
+
+            marketChartInstance.data.datasets[0].data = demandData;
+            marketChartInstance.data.datasets[1].data = supplyData;
+            marketChartInstance.data.datasets[2].data = [{ x: q_star, y: p_star }];
+            
+            marketChartInstance.update();
+
+            document.getElementById('eq-price').innerText = p_star.toFixed(1);
+            document.getElementById('eq-quant').innerText = q_star.toFixed(1);
+        }
+
+    </script>
+<script>
+/* AJOUT : 30 flashcards + 7 graphiques + quiz 4 options. A inclure juste avant </body> (après ton script existant). */
+(function(){
+/* ===== 30 flashcards ===== */
+[
+["consommateur","Panier de biens","Qu'est-ce qu'un panier de biens ?","Un vecteur des quantités de chaque bien (élément de ℝⁿ₊). Exemple : 20 unités d'alimentation et 30 de vêtements."],
+["consommateur","Relation de préférence","Que signifient ≿, ∼ et ≻ ?","A ≿ B : A faiblement préféré à B.\nA ∼ B ⇔ A ≿ B et B ≿ A (indifférence).\nA ≻ B ⇔ A ≿ B et non B ≿ A (préférence stricte)."],
+["consommateur","Approche ordinale","Que signifie « approche ordinale » de l'utilité ?","On classe seulement les paniers : la valeur de U n'a pas de sens en soi. Si U représente ≿, alors U+λ ou ρ·U (λ, ρ > 0) la représentent aussi."],
+["consommateur","Fonction d'utilité","Quand dit-on que U représente la préférence ≿ ?","Quand U(X) ≥ U(Y) ⇔ X ≿ Y pour toute paire de paniers X, Y."],
+["consommateur","CI décroissantes","Pourquoi les courbes d'indifférence sont-elles décroissantes ?","Conséquence de la monotonie : si on retire du bien Y, il faut donner plus de X pour garder l'utilité constante."],
+["consommateur","CI qui ne se croisent pas","Pourquoi deux CI ne peuvent-elles pas se croiser ?","Si Y ∼ Z et Y ∼ T, la transitivité imposerait Z ∼ T, impossible car Z et T sont sur des CI différentes."],
+["consommateur","Convexité des CI","Que traduit la convexité des CI ?","Un TMS décroissant : préférence pour la diversité. Plus on a d'un bien, moins on sacrifie de l'autre pour en avoir davantage."],
+["consommateur","Substituts parfaits","Quelle forme ont les CI de biens parfaitement substituables ?","Des droites : le TMS est constant (ex. jus de pomme / jus d'orange). Cas limite peu réaliste."],
+["consommateur","Compléments parfaits","Quelle forme ont les CI de biens parfaitement complémentaires ?","Une forme en L (proportion fixe, ex. chaussure droite / gauche). U non différentiable : on n'a pas TMS = P_N/P_V."],
+["consommateur","Les « maux »","Comment intégrer un « mal » (pollution, bruit) dans la théorie ?","On le redéfinit par son contraire (air pur, silence) et on applique la théorie normalement."],
+["consommateur","Utilité marginale","Définis l'utilité marginale.","Um_V = ∂U/∂V : utilité d'une unité supplémentaire du bien, autres quantités fixées. Souvent supposée positive et décroissante."],
+["consommateur","TMS et utilités marginales","Montre que TMS = Um_N / Um_V.","Sur une CI, dU = Um_V·dV + Um_N·dN = 0, donc dV/dN = −Um_N/Um_V, d'où TMS = Um_N/Um_V."],
+["consommateur","Pente de la droite de budget","Que signifie la pente −P_N/P_V de la droite de budget ?","C'est le prix relatif : pour 1 unité de N en plus, on renonce à P_N/P_V unités de V. Ordonnée à l'origine R/P_V, abscisse R/P_N."],
+["consommateur","Déplacements de la droite de budget","Comment bouge la droite de budget si R, P_N ou P_V change ?","R en hausse : déplacement parallèle vers l'extérieur.\nP_N en hausse : pivot autour de R/P_V (plus raide).\nP_V en hausse : pivot autour de R/P_N (plus plate)."],
+["consommateur","Solution en coin","Quelles sont les conditions d'une solution en coin ?","TMS ≥ P_N/P_V et V = 0, ou TMS ≤ P_N/P_V et N = 0. Le consommateur voudrait substituer, mais un bien est déjà à zéro."],
+["consommateur","Lagrangien du consommateur","Écris le lagrangien et les CPO du programme du consommateur.","L = U + λ(R − P_N·N − P_V·V).\nCPO : Um_N = λ·P_N ; Um_V = λ·P_V ; R = P_N·N + P_V·V."],
+["consommateur","Sens de λ","Que mesure le multiplicateur de Lagrange λ ?","L'utilité marginale du revenu : dU/dR = λ, le gain d'utilité d'1 € de revenu supplémentaire."],
+["consommateur","Um/P égalisée","Interprète Um_N/P_N = Um_V/P_V.","À l'optimum, 1 € dépensé en alimentation procure la même utilité qu'1 € dépensé en vêtements."],
+["consommateur","Programme dual","Qu'est-ce que le programme dual du consommateur ?","Minimiser la dépense P_N·N + P_V·V sous la contrainte U = U*. Il donne la même solution que le primal (TMS = rapport des prix)."],
+["consommateur","Cobb-Douglas","Quelles sont les demandes pour U = X^α · Y^(1−α) ?","X* = αR/p_X et Y* = (1−α)R/p_Y. α est la part du budget consacrée à X."],
+["consommateur","Absence d'illusion monétaire","Que signifie « absence d'illusion monétaire » ?","D(R, p) = D(λR, λp) pour tout λ > 0 : multiplier revenu et prix par λ ne change pas la demande."],
+["consommateur","Existence et unicité","Quand la solution du programme du consommateur existe-t-elle, et est-elle unique ?","U continue ⇒ une solution existe. Préférences croissantes et strictement concaves ⇒ solution unique, d'où la demande D(R, p)."],
+["marche","Courbe d'offre","Comment lire la courbe d'offre ?","Pente positive ; prix minimal exigé pour offrir Q. Variation du prix : mouvement sur la courbe. Variation des coûts : déplacement de la courbe."],
+["marche","Courbe de demande","Comment lire la courbe de demande ?","Pente négative ; prix maximal acceptable pour Q. Prix du bien : mouvement sur la courbe. Revenu, goûts, prix des autres biens : déplacement."],
+["marche","Substituts et compléments","Effet d'une hausse du prix d'un bien sur la demande d'un substitut, puis d'un complément ?","Substitut : demande en hausse (beurre / graisse végétale). Complément : demande en baisse (voiture / essence)."],
+["marche","Déséquilibres de marché","Que se passe-t-il si le prix est sous ou au-dessus du prix d'équilibre ?","Sous P_E : pénurie, le prix monte. Au-dessus de P_E : excès d'offre, le prix baisse. Retour vers l'équilibre."],
+["marche","Statique comparative","Effet sur (P*, Q*) d'une hausse de l'offre, puis d'une hausse de la demande ?","Offre en hausse : P* baisse, Q* monte. Demande en hausse : P* et Q* montent. Deux chocs simultanés : un des effets est ambigu."],
+["marche","Élasticité-prix de la demande","Définis l'élasticité-prix de la demande et son interprétation.","E_P = (P/Q)(dQ/dP), en général négative. |E| supérieur à 1 : élastique ; inférieur à 1 : inélastique. Dépend des substituts disponibles."],
+["marche","Élasticité-revenu et croisée","Comment interpréter l'élasticité-revenu et l'élasticité croisée ?","E_R = (R/Q)(dQ/dR), en général positive. Élasticité croisée positive : substituts ; négative : compléments."],
+["marche","Court terme vs long terme","Comment varient les élasticités entre court et long terme ?","Généralement plus fortes à long terme. Exceptions : biens durables (demande plus élastique à CT) ; logement locatif (offre inélastique à CT)."]
+].forEach(c=>flashcardsData.push({theme:c[0],tag:c[0]==='consommateur'?'Consommateur':'Marché & CPP',title:c[1],front:c[2],back:c[3]}));
+
+/* ===== injection HTML ===== */
+const $=id=>document.getElementById(id);
+document.querySelector('nav').insertAdjacentHTML('beforeend','<button onclick="switchTab(\'graphs\')" id="tab-btn-graphs" class="tab-btn flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-white hover:bg-slate-800/60"><i data-lucide="line-chart" class="w-4 h-4"></i><span>Graphiques du cours</span></button>');
+const mob=document.querySelector('header .md\\:hidden');
+if(mob)mob.insertAdjacentHTML('beforeend','<button onclick="switchTab(\'graphs\')" id="mob-btn-graphs" class="mob-tab-btn flex flex-col items-center p-2 text-xs font-medium text-slate-400"><i data-lucide="line-chart" class="w-5 h-5 mb-1"></i><span>Graphiques</span></button>');
+$('view-mode-grid').insertAdjacentHTML('afterend','<button id="view-mode-quiz" onclick="setFlashcardMode(\'quiz\')" class="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5 transition"><i data-lucide="list-checks" class="w-4 h-4"></i><span>Quiz (4 options)</span></button>');
+$('flashcard-learn-container').insertAdjacentHTML('afterend','<div id="quiz-container" class="hidden max-w-2xl mx-auto space-y-6"><div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2"><div class="flex justify-between text-xs font-semibold"><span class="text-slate-400">Quiz sur les flashcards</span><span id="quiz-stats" class="text-indigo-400"></span></div><div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800"><div id="quiz-bar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full w-0 transition-all duration-300"></div></div><p class="text-[11px] text-slate-500">Une mauvaise réponse remet la carte dans la pile jusqu\'à ce que tu la maîtrises. Le filtre de thème s\'applique.</p></div><div id="quiz-area"></div></div>');
+document.querySelector('main').insertAdjacentHTML('beforeend','<section id="tab-graphs" class="tab-content hidden space-y-6"><div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl"><h2 class="text-xl font-bold text-white">Graphiques clés du cours</h2><p class="text-xs text-slate-400 mt-1">Courbes d\'indifférence, optimum, préférences particulières, utilité marginale, élasticité, choc d\'offre sur le blé.</p></div><div id="graphs-container" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div></section>');
+
+/* ===== mode quiz ===== */
+const rnd=()=>Math.random()-.5;
+let qz={deck:[],total:0,done:0,wrong:0,locked:false,opts:[]};
+window.setFlashcardMode=function(m){
+  const ids={learn:'flashcard-learn-container',grid:'flashcards-grid',quiz:'quiz-container'};
+  for(const k in ids){
+    $(ids[k]).classList.toggle('hidden',k!==m);
+    $('view-mode-'+k).className='px-3 py-1.5 text-xs font-bold rounded-lg flex items-center gap-1.5 transition '+(k===m?'text-white bg-indigo-600':'text-slate-400 hover:text-white');
+  }
+  currentFlashcardMode=m;
+};
+const _fc=window.filterCards;
+window.filterCards=function(t,b){_fc(t,b);startQuiz();};
+window.startQuiz=function(){
+  const base=currentThemeFilter==='all'?flashcardsData:flashcardsData.filter(c=>c.theme===currentThemeFilter);
+  qz={deck:[...base].sort(rnd),total:base.length,done:0,wrong:0,locked:false,opts:[]};
+  nextQuiz();
+};
+function stat(){
+  $('quiz-stats').innerText=qz.done+' / '+qz.total+' maîtrisées · '+qz.wrong+' erreur(s)';
+  $('quiz-bar').style.width=(qz.total?qz.done/qz.total*100:0)+'%';
+}
+window.nextQuiz=function(){
+  const a=$('quiz-area');stat();
+  if(!qz.deck.length){
+    a.innerHTML='<div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center space-y-4"><h3 class="text-xl font-black text-white">Quiz terminé 🎉</h3><p class="text-xs text-slate-400">'+qz.total+' cartes maîtrisées avec '+qz.wrong+' erreur(s).</p><button onclick="startQuiz()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl">Recommencer</button></div>';
+    return;
+  }
+  const c=qz.deck[0];qz.locked=false;
+  const pool=flashcardsData.filter(x=>x.back!==c.back);
+  const d=[...pool.filter(x=>x.theme===c.theme).sort(rnd),...pool.filter(x=>x.theme!==c.theme).sort(rnd)].slice(0,3);
+  qz.opts=[c,...d].sort(rnd);
+  a.innerHTML='<div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider"></span><h4 class="text-base font-bold text-white leading-relaxed"></h4><div id="quiz-opts" class="space-y-2.5"></div><div id="quiz-fb" class="hidden"></div></div>';
+  a.querySelector('span').textContent=c.tag+' · '+c.title;
+  a.querySelector('h4').textContent=c.front;
+  qz.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-800/80 text-xs text-slate-200 whitespace-pre-line transition';
+    b.textContent=String.fromCharCode(65+i)+'. '+o.back;
+    b.onclick=()=>answerQuiz(i);
+    $('quiz-opts').appendChild(b);
+  });
+};
+window.answerQuiz=function(i){
+  if(qz.locked)return;qz.locked=true;
+  const c=qz.deck[0],ok=qz.opts[i]===c,bs=$('quiz-opts').children;
+  qz.opts.forEach((o,j)=>{
+    bs[j].className=o===c?'w-full text-left p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-100 text-xs whitespace-pre-line':j===i?'w-full text-left p-3.5 rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-100 text-xs whitespace-pre-line':'w-full text-left p-3.5 rounded-xl border border-slate-800 text-xs text-slate-500 whitespace-pre-line opacity-40';
+  });
+  if(ok){qz.deck.shift();qz.done++;}else{qz.deck.push(qz.deck.shift());qz.wrong++;}
+  stat();
+  const fb=$('quiz-fb');fb.classList.remove('hidden');
+  fb.innerHTML='<div class="flex items-center justify-between pt-2"><strong class="text-sm '+(ok?'text-emerald-400':'text-rose-400')+'">'+(ok?'✓ Bonne réponse !':'✗ Raté, la carte reviendra.')+'</strong><button onclick="nextQuiz()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl">Suivante →</button></div>';
+};
+
+/* ===== graphiques ===== */
+const COL=['#818cf8','#34d399','#fbbf24','#f472b6'];
+const xy=(f,a,b,s)=>{const o=[];for(let x=a;x<=b+1e-9;x+=s){const y=f(x);if(isFinite(y))o.push({x:+x.toFixed(3),y:+y.toFixed(3)});}return o;};
+const par=q=>{const o=[];for(let p=0;p<=12;p+=.5)o.push({x:q(p),y:p});return o;};
+const L=(l,d,c,e={})=>({label:l,data:d,borderColor:c,backgroundColor:c,showLine:true,pointRadius:0,borderWidth:3,...e});
+const PT=(l,d,c)=>({label:l,data:d,borderColor:'#fff',backgroundColor:c,pointRadius:6,borderWidth:2});
+const gv=id=>+$(id).value;
+function optDs(){
+  const a=gv('opt-a'),R=gv('opt-r'),px=gv('opt-px'),py=gv('opt-py');
+  const xs=a*R/px,ys=(1-a)*R/py,u=Math.pow(xs,a)*Math.pow(ys,1-a),xm=R/px*1.2;
+  return {xm,ym:R/py*1.2,xs,ys,px,py,ds:[
+    L('Droite de budget',[{x:0,y:R/py},{x:R/px,y:0}],COL[2]),
+    L('CI optimale U*',xy(x=>Math.pow(u/Math.pow(x,a),1/(1-a)),xm/80,xm,xm/80),COL[0]),
+    PT('Optimum E',[{x:xs,y:ys}],COL[1])]};
+}
+const GR=[
+{id:'g-ci',t:"Courbes d'indifférence : U = N·V",d:"Hyperboles V = U₀/N : décroissantes, convexes, qui ne se croisent pas. L'utilité augmente en s'éloignant de l'origine.",ds:()=>[1,2,3,4].map((u,i)=>L('U = '+u,xy(n=>u/n,.2,5,.1),COL[i])),xm:5,ym:4.5,x:'Produits alimentaires (N)',y:'Vêtements (V)'},
+{id:'g-opt',t:"Optimum du consommateur (Cobb-Douglas)",d:"Tangence entre la CI et la droite de budget : TMS = P_N/P_V. Avec U = X^α·Y^(1−α), X* = αR/p_X et Y* = (1−α)R/p_Y. Fais varier α, R et les prix.",opt:true,ds:()=>optDs().ds,xm:24,ym:12,x:'Bien X',y:'Bien Y'},
+{id:'g-sub',t:'Biens parfaitement substituables',d:"CI linéaires, TMS constant (ici 1 verre de jus d'orange pour 2 de jus de pomme).",ds:()=>[2,4,6].map((a,i)=>L('U'+(i+1),[{x:0,y:a},{x:a/2,y:0}],COL[i])),xm:3.5,ym:7,x:"Verres de jus d'orange",y:'Verres de jus de pomme'},
+{id:'g-com',t:'Biens parfaitement complémentaires',d:"CI en L : proportion optimale fixe, TMS non défini au coin, solution non caractérisée par TMS = rapport des prix.",ds:()=>[[1,40],[2,80]].map(([a,b],i)=>L('U'+(i+1),[{x:a,y:130},{x:a,y:b},{x:4,y:b}],COL[i])),xm:4,ym:130,x:'Verres',y:"Jus d'orange (cl)"},
+{id:'g-um',t:'Utilité marginale décroissante',d:"U = √V : l'utilité totale croît de moins en moins vite, donc Um = ∂U/∂V (pente de U) est décroissante. C'est ce qui rend le TMS décroissant.",ds:()=>[L('Utilité totale U = √V',xy(v=>Math.sqrt(v),0,10,.25),COL[0]),L('Utilité marginale Um = 1/(2√V)',xy(v=>1/(2*Math.sqrt(v)),.25,10,.25),COL[2])],xm:10,ym:3.5,x:'Vêtements (V)',y:'Utilité'},
+{id:'g-el',t:'Élasticité sur une demande linéaire',d:"Pour Q = 8 − 2P : |E| = (8−Q)/Q. Non constante : élastique (|E| supérieur à 1) pour Q faible, inélastique ensuite, |E| = 1 en Q = 4.",ds:()=>[L('|E| = (8−Q)/Q',xy(q=>(8-q)/q,.4,7.6,.2),COL[1]),L('|E| = 1',[{x:0,y:1},{x:8,y:1}],COL[3],{borderDash:[6,4],borderWidth:2}),PT('Q = 4',[{x:4,y:1}],COL[2])],xm:8,ym:5,x:'Quantité Q',y:'|Élasticité-prix|'},
+{id:'g-ble',t:"Marché du blé : choc d'offre (Ukraine)",d:"Offre 1460 + 115P → 1060 + 115P, demande 2900 − 125P. Équilibre de (2150 ; 6 $) à (≈1942 ; ≈7,67 $) : offre et demande peu élastiques, donc le prix bouge bien plus que la quantité.",ds:()=>[L('Demande',par(p=>2900-125*p),COL[0]),L('Offre initiale',par(p=>1460+115*p),COL[1]),L('Offre après choc',par(p=>1060+115*p),COL[3],{borderDash:[6,4]}),PT('Équilibre initial',[{x:2150,y:6}],COL[2]),PT('Nouvel équilibre',[{x:1941.7,y:7.67}],'#fff')],xmin:1000,xm:3000,ym:12,x:'Quantité (millions de boisseaux)',y:'Prix ($)'}
+];
+const grCh={};let grDone=false;
+function mkChart(g){
+  const t='#94a3b8';
+  grCh[g.id]=new Chart($(g.id).getContext('2d'),{type:'scatter',data:{datasets:g.ds()},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:t}}},scales:{x:{min:g.xmin||0,max:g.xm,title:{display:true,text:g.x,color:t},grid:{color:'#1e293b'},ticks:{color:t}},y:{min:0,max:g.ym,title:{display:true,text:g.y,color:t},grid:{color:'#1e293b'},ticks:{color:t}}}}});
+}
+window.updateOpt=function(){
+  const o=optDs(),ch=grCh['g-opt'];
+  ch.data.datasets=o.ds;ch.options.scales.x.max=o.xm;ch.options.scales.y.max=o.ym;ch.update();
+  ['a','r','px','py'].forEach(k=>$('opt-'+k+'-v').innerText=$('opt-'+k).value);
+  $('opt-res').innerHTML='X* = <b class="text-white">'+o.xs.toFixed(2)+'</b> · Y* = <b class="text-white">'+o.ys.toFixed(2)+'</b> · TMS = P_X/P_Y = <b class="text-white">'+(o.px/o.py).toFixed(2)+'</b>';
+};
+function initGraphs(){
+  if(grDone)return;grDone=true;
+  GR.forEach(g=>{
+    const sl=(k,l,mn,mx,st,v)=>'<label class="text-[11px] text-slate-400">'+l+' = <b id="opt-'+k+'-v" class="text-white">'+v+'</b><input type="range" id="opt-'+k+'" min="'+mn+'" max="'+mx+'" step="'+st+'" value="'+v+'" oninput="updateOpt()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"></label>';
+    const ctl=g.opt?'<div class="grid grid-cols-2 gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800 mb-3">'+sl('a','α',.1,.9,.05,.5)+sl('r','R',50,200,10,100)+sl('px','P_X',1,20,1,5)+sl('py','P_Y',1,20,1,10)+'</div>':'';
+    const card=document.createElement('div');
+    card.className='bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg';
+    card.innerHTML='<h3 class="text-base font-bold text-white mb-1"></h3><p class="text-xs text-slate-400 mb-4"></p>'+ctl+'<div class="bg-slate-950 p-3 rounded-xl border border-slate-800 h-[300px]"><canvas id="'+g.id+'"></canvas></div>'+(g.opt?'<div id="opt-res" class="text-xs text-slate-400 mt-3"></div>':'');
+    card.querySelector('h3').textContent=g.t;card.querySelector('p').textContent=g.d;
+    $('graphs-container').appendChild(card);mkChart(g);
+  });
+  updateOpt();
+}
+const _sw=window.switchTab;
+window.switchTab=function(t){_sw(t);if(t==='graphs')initGraphs();};
+window.addEventListener('DOMContentLoaded',()=>{startQuiz();lucide.createIcons();});
+})();
+</script>
+
+</body>
+</html>
